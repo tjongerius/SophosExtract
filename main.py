@@ -33,7 +33,7 @@ print("Found {} tenants...".format(len(tenantdata.get("items"))))
 # Collection of list below.
 # List format: Tuple ("OpCoName", [ListSites]
 itemlist = list()
-for tenant in tenantdata.get("items")[:1]:
+for tenant in tenantdata.get("items"):
     print("Grabbing data from {}".format(tenant.get("name")))
     region = tenant.get("dataRegion")
     s.headers.update({"X-Tenant-ID": tenant.get("id")})
