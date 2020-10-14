@@ -33,7 +33,7 @@ print("Found {} tenants...".format(len(tenantdata.get("items"))))
 # Collection of list below.
 # List format: Tuple ("OpCoName", [ListSites]
 itemlist = list()
-for tenant in tenantdata.get("items"):
+for tenant in tenantdata.get("items")[:1]:
     print("Grabbing data from {}".format(tenant.get("name")))
     region = tenant.get("dataRegion")
     s.headers.update({"X-Tenant-ID": tenant.get("id")})
@@ -47,7 +47,7 @@ for tenant in tenantdata.get("items"):
         x = s.get("https://api-{}.central.sophos.com/endpoint/v1/settings/web-control/local-sites?page={}&pageSize=50&pageTotal=true".format(region, page))
         data = x.json()
         # Add data to tuple list
-        itemlist.extend((tenant.get("name") ,data.get("items")))
+        itemlist.append((tenant.get("name"), data.get("items")))
         # Iterate pages
         page += 1
         # Ovewrite max page (if none, leave 2)
@@ -58,7 +58,8 @@ for tenant in tenantdata.get("items"):
 print("Providing results to user:")
 # Loop over tuple list
 for item in itemlist:
-    print("{},{},{},{}".format(item[0], item[1].get("url"), item[1].get("tags"), item[1].get("comment")))
+    for uri in item[1]:
+        print("{},{},{},{}".format(item[0], uri.get("url"), uri.get("tags"), uri.get("comment")))
 
 print("Videns rocks, may the force be with us!")
 print("""

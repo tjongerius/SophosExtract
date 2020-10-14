@@ -48,7 +48,7 @@ for tenant in tenantdata.get("items"):
         x = s.get("https://api-{}.central.sophos.com/endpoint/v1/settings/web-control/local-sites?page={}&pageSize=50&pageTotal=true".format(region, page))
         data = x.json()
         # Add data to tuple list
-        itemlist.extend((tenant.get("name") ,data.get("items")))
+        itemlist.append((tenant.get("name"), data.get("items")))
         # Iterate pages
         page += 1
         # Ovewrite max page (if none, leave 2)
@@ -64,12 +64,14 @@ with open('sophos_output.csv', mode='w') as csv_file:
     writer.writeheader()
     # Loop over tuple list
     for item in itemlist:
-        writer.writerow({
-            'opco': item[0],
-            'url': item[1].get("url"),
-            'tags': item[1].get("tags"),
-            'comment': item[1].get("comment")
-        })
+        for uri in item[1]:
+            writer.writerow({
+                'opco': item[0],
+                'url': uri.get("url"),
+                'tags': uri.get("tags"),
+                'comment': uri.get("comment")
+            })
+
 
 print("Videns rocks, may the force be with us!")
 print("""
